@@ -31,11 +31,13 @@ type Subject = Database["public"]["Tables"]["subjects"]["Row"];
 interface SessionTimerClientProps {
     subjects: Subject[];
     initialActiveSession: Database["public"]["Tables"]["study_sessions"]["Row"] | null;
+    penaltyMode?: "none" | "pause_timer" | "streak_debit" | null;
 }
 
 export function SessionTimerClient({
     subjects,
     initialActiveSession,
+    penaltyMode = "pause_timer",
 }: SessionTimerClientProps) {
     const router = useRouter();
     const [state, dispatch] = useReducer(timerReducer, initialTimerState);
@@ -55,12 +57,16 @@ export function SessionTimerClient({
 
     const handleDistraction = useCallback(async () => {
         if (state.sessionId && state.status === "running") {
-            dispatch({ type: "PAUSE" });
+            // Apply penalty based on mode
+            if (penaltyMode === "pause_timer" || penaltyMode === undefined || penaltyMode === null) {
+                dispatch({ type: "PAUSE" });
+            }
+
             setShowDistractionWarning(true);
             setDistractionCount((prev) => prev + 1);
             await recordDistraction(state.sessionId, "other");
         }
-    }, [state.sessionId, state.status]);
+    }, [state.sessionId, state.status, penaltyMode]);
 
     const handleReturnFromDistraction = useCallback(() => {
         setShowDistractionWarning(false);
