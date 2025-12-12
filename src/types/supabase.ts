@@ -7,25 +7,315 @@ export type Json =
     | { [key: string]: Json | undefined }
     | Json[];
 
-export interface Database {
+export type Database = {
     public: {
         Tables: {
-            // Tables will be added as they are created in Supabase
+            profiles: {
+                Row: {
+                    id: string;
+                    full_name: string | null;
+                    avatar_url: string | null;
+                    timezone: string;
+                    daily_goal_minutes: number;
+                    preferred_session_duration: number;
+                    created_at: string;
+                    updated_at: string;
+                };
+                Insert: {
+                    id: string;
+                    full_name?: string | null;
+                    avatar_url?: string | null;
+                    timezone?: string;
+                    daily_goal_minutes?: number;
+                    preferred_session_duration?: number;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    full_name?: string | null;
+                    avatar_url?: string | null;
+                    timezone?: string;
+                    daily_goal_minutes?: number;
+                    preferred_session_duration?: number;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+            };
+            subjects: {
+                Row: {
+                    id: string;
+                    user_id: string;
+                    name: string;
+                    color: string;
+                    icon: string;
+                    is_archived: boolean;
+                    total_minutes: number;
+                    created_at: string;
+                    updated_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    user_id: string;
+                    name: string;
+                    color?: string;
+                    icon?: string;
+                    is_archived?: boolean;
+                    total_minutes?: number;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    user_id?: string;
+                    name?: string;
+                    color?: string;
+                    icon?: string;
+                    is_archived?: boolean;
+                    total_minutes?: number;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+            };
+            study_sessions: {
+                Row: {
+                    id: string;
+                    user_id: string;
+                    subject_id: string | null;
+                    started_at: string;
+                    ended_at: string | null;
+                    planned_duration_minutes: number | null;
+                    actual_duration_minutes: number | null;
+                    focus_score: number | null;
+                    honesty_score: number | null;
+                    source: Database["public"]["Enums"]["session_source"];
+                    notes: string | null;
+                    is_completed: boolean;
+                    created_at: string;
+                    updated_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    user_id: string;
+                    subject_id?: string | null;
+                    started_at: string;
+                    ended_at?: string | null;
+                    planned_duration_minutes?: number | null;
+                    actual_duration_minutes?: number | null;
+                    focus_score?: number | null;
+                    honesty_score?: number | null;
+                    source?: Database["public"]["Enums"]["session_source"];
+                    notes?: string | null;
+                    is_completed?: boolean;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    user_id?: string;
+                    subject_id?: string | null;
+                    started_at?: string;
+                    ended_at?: string | null;
+                    planned_duration_minutes?: number | null;
+                    actual_duration_minutes?: number | null;
+                    focus_score?: number | null;
+                    honesty_score?: number | null;
+                    source?: Database["public"]["Enums"]["session_source"];
+                    notes?: string | null;
+                    is_completed?: boolean;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+            };
+            distraction_events: {
+                Row: {
+                    id: string;
+                    session_id: string;
+                    user_id: string;
+                    distraction_type: Database["public"]["Enums"]["distraction_type"];
+                    duration_seconds: number | null;
+                    notes: string | null;
+                    occurred_at: string;
+                    created_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    session_id: string;
+                    user_id: string;
+                    distraction_type: Database["public"]["Enums"]["distraction_type"];
+                    duration_seconds?: number | null;
+                    notes?: string | null;
+                    occurred_at?: string;
+                    created_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    session_id?: string;
+                    user_id?: string;
+                    distraction_type?: Database["public"]["Enums"]["distraction_type"];
+                    duration_seconds?: number | null;
+                    notes?: string | null;
+                    occurred_at?: string;
+                    created_at?: string;
+                };
+            };
+            goals: {
+                Row: {
+                    id: string;
+                    user_id: string;
+                    subject_id: string | null;
+                    title: string;
+                    description: string | null;
+                    target_minutes: number;
+                    current_minutes: number;
+                    status: Database["public"]["Enums"]["goal_status"];
+                    deadline: string | null;
+                    created_at: string;
+                    updated_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    user_id: string;
+                    subject_id?: string | null;
+                    title: string;
+                    description?: string | null;
+                    target_minutes: number;
+                    current_minutes?: number;
+                    status?: Database["public"]["Enums"]["goal_status"];
+                    deadline?: string | null;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    user_id?: string;
+                    subject_id?: string | null;
+                    title?: string;
+                    description?: string | null;
+                    target_minutes?: number;
+                    current_minutes?: number;
+                    status?: Database["public"]["Enums"]["goal_status"];
+                    deadline?: string | null;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+            };
+            streaks: {
+                Row: {
+                    id: string;
+                    user_id: string;
+                    current_streak: number;
+                    longest_streak: number;
+                    last_study_date: string | null;
+                    created_at: string;
+                    updated_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    user_id: string;
+                    current_streak?: number;
+                    longest_streak?: number;
+                    last_study_date?: string | null;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    user_id?: string;
+                    current_streak?: number;
+                    longest_streak?: number;
+                    last_study_date?: string | null;
+                    created_at?: string;
+                    updated_at?: string;
+                };
+            };
+            achievements: {
+                Row: {
+                    id: string;
+                    user_id: string;
+                    achievement_key: string;
+                    category: Database["public"]["Enums"]["achievement_category"];
+                    title: string;
+                    description: string | null;
+                    icon: string | null;
+                    unlocked_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    user_id: string;
+                    achievement_key: string;
+                    category: Database["public"]["Enums"]["achievement_category"];
+                    title: string;
+                    description?: string | null;
+                    icon?: string | null;
+                    unlocked_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    user_id?: string;
+                    achievement_key?: string;
+                    category?: Database["public"]["Enums"]["achievement_category"];
+                    title?: string;
+                    description?: string | null;
+                    icon?: string | null;
+                    unlocked_at?: string;
+                };
+            };
+            report_snapshots: {
+                Row: {
+                    id: string;
+                    user_id: string;
+                    report_date: string;
+                    report_type: string;
+                    total_minutes: number;
+                    session_count: number;
+                    avg_focus_score: number | null;
+                    avg_honesty_score: number | null;
+                    subjects_studied: Json;
+                    created_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    user_id: string;
+                    report_date: string;
+                    report_type?: string;
+                    total_minutes?: number;
+                    session_count?: number;
+                    avg_focus_score?: number | null;
+                    avg_honesty_score?: number | null;
+                    subjects_studied?: Json;
+                    created_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    user_id?: string;
+                    report_date?: string;
+                    report_type?: string;
+                    total_minutes?: number;
+                    session_count?: number;
+                    avg_focus_score?: number | null;
+                    avg_honesty_score?: number | null;
+                    subjects_studied?: Json;
+                    created_at?: string;
+                };
+            };
         };
-        Views: {
-            // Views will be added as they are created
-        };
+        Views: {};
         Functions: {
-            // Functions will be added as they are created
+            seed_user_defaults: {
+                Args: { target_user_id: string };
+                Returns: undefined;
+            };
         };
         Enums: {
-            // Enums will be added as they are created
+            session_source: "manual" | "timer" | "quick_start";
+            distraction_type: "phone" | "social_media" | "conversation" | "daydreaming" | "food" | "other";
+            goal_status: "active" | "completed" | "abandoned";
+            achievement_category: "streak" | "time" | "sessions" | "focus" | "milestone";
         };
-        CompositeTypes: {
-            // Composite types will be added as they are created
-        };
+        CompositeTypes: {};
     };
-}
+};
 
 export type Tables<
     PublicTableNameOrOptions extends
