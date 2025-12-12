@@ -12,13 +12,15 @@ import {
     User,
     Settings,
     LogOut,
+    Target,
 } from "lucide-react";
 
 const overviewLinks = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/my-decks", label: "My decks", icon: Library },
+    { href: "/sessions", label: "Study Timer", icon: Clock },
+    { href: "/my-decks", label: "Study Log", icon: Library },
+    { href: "/goals", label: "Goals", icon: Target },
     { href: "/progress", label: "Progress", icon: TrendingUp },
-    { href: "/timer", label: "Timer", icon: Clock },
     { href: "/profile", label: "Profile", icon: User },
 ];
 
