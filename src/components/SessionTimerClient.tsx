@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { SubjectSelect } from "@/components/SubjectSelect";
 import { TimerControls } from "@/components/TimerControls";
 import { TimerDisplay } from "@/components/TimerDisplay";
+import { DistractionWarning } from "@/components/DistractionWarning";
+import { useDistractionWatcher } from "@/hooks/useDistractionWatcher";
 import {
     timerReducer,
     initialTimerState,
@@ -20,6 +22,7 @@ import {
     cancelSession,
     getActiveSession,
 } from "@/app/actions/sessions";
+import { recordDistraction } from "@/app/actions/distractions";
 import type { Database } from "@/types/supabase";
 import { Clock, Target, TrendingUp } from "lucide-react";
 
@@ -47,6 +50,33 @@ export function SessionTimerClient({
     const [honestyScore, setHonestyScore] = useState(80);
     const [notes, setNotes] = useState("");
     const [isInitialized, setIsInitialized] = useState(false);
+    const [showDistractionWarning, setShowDistractionWarning] = useState(false);
+    const [distractionCount, setDistractionCount] = useState(0);
+
+    const handleDistraction = useCallback(async () => {
+        if (state.sessionId && state.status === "running") {
+            dispatch({ type: "PAUSE" });
+            setShowDistractionWarning(true);
+            setDistractionCount((prev) => prev + 1);
+            await recordDistraction(state.sessionId, "other");
+        }
+    }, [state.sessionId, state.status]);
+
+    const handleReturnFromDistraction = useCallback(() => {
+        setShowDistractionWarning(false);
+    }, []);
+
+    useDistractionWatcher({
+        isActive: state.status === "running",
+        onDistraction: handleDistraction,
+        onReturn: handleReturnFromDistraction,
+    });
+
+    const handleResumeFromDistraction = useCallback(() => {
+        setShowDistractionWarning(false);
+        dispatch({ type: "RESUME" });
+    }, []);
+
 
     useEffect(() => {
         if (isInitialized) return;
@@ -189,6 +219,11 @@ export function SessionTimerClient({
 
     return (
         <div className="space-y-8">
+            <DistractionWarning
+                isVisible={showDistractionWarning}
+                distractionCount={distractionCount}
+                onResume={handleResumeFromDistraction}
+            />
             <div className="bg-white rounded-2xl shadow-xl shadow-cyan-500/5 border border-neutral-100 p-8">
                 <div className="max-w-md mx-auto space-y-8">
                     {state.status === "idle" && (
