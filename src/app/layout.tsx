@@ -15,8 +15,39 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Study Bit",
-  description: "Your modern learning companion for mastering any subject with bite-sized lessons.",
+  title: {
+    default: "STUDYBIT - Study Smarter, Not Harder",
+    template: "%s | STUDYBIT",
+  },
+  description:
+    "Your honest study companion that helps you track, measure, and improve your focus with bite-sized sessions and actionable insights.",
+  keywords: [
+    "study tracker",
+    "focus timer",
+    "productivity",
+    "study sessions",
+    "learning",
+    "education",
+  ],
+  authors: [{ name: "STUDYBIT Team" }],
+  openGraph: {
+    title: "STUDYBIT - Study Smarter, Not Harder",
+    description:
+      "Your honest study companion that helps you track, measure, and improve your focus with bite-sized sessions and actionable insights.",
+    type: "website",
+    locale: "en_US",
+    siteName: "STUDYBIT",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "STUDYBIT - Study Smarter, Not Harder",
+    description:
+      "Your honest study companion that helps you track, measure, and improve your focus with bite-sized sessions and actionable insights.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -29,8 +60,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-950 text-white min-h-screen flex flex-col`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-cyan-500 focus:text-white focus:rounded-lg focus:outline-none"
+        >
+          Skip to main content
+        </a>
         <Header />
-        <main id="main-content" className="flex-1 pt-16">
+        <main id="main-content" className="flex-1 pt-16" role="main">
           {children}
         </main>
         <Footer />
