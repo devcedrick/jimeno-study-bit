@@ -157,7 +157,12 @@ export function SubjectSelect({
                             <div className="border-t border-neutral-100 p-2">
                                 <button
                                     type="button"
-                                    onClick={() => setIsCreating(true)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.nativeEvent.stopImmediatePropagation();
+                                        console.log("Create New Subject button clicked - setting isCreating to true");
+                                        setIsCreating(true);
+                                    }}
                                     className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-cyan-600 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors"
                                 >
                                     <Plus className="w-4 h-4" />
@@ -166,7 +171,7 @@ export function SubjectSelect({
                             </div>
                         </>
                     ) : (
-                        <div className="p-4 space-y-3 bg-neutral-50">
+                        <div className="p-4 space-y-3 bg-neutral-50" onClick={(e) => e.stopPropagation()}>
                             <div className="flex items-center justify-between mb-1">
                                 <span className="text-xs font-semibold text-neutral-500 uppercase">New Subject</span>
                                 <button
@@ -182,8 +187,9 @@ export function SubjectSelect({
                                 type="text"
                                 value={newSubjectName}
                                 onChange={(e) => setNewSubjectName(e.target.value)}
+                                onClick={(e) => e.stopPropagation()}
                                 placeholder="Subject name..."
-                                className="w-full px-3 py-2 text-sm border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white"
+                                className="w-full px-3 py-2 text-sm text-neutral-900 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white"
                                 autoFocus
                             />
 
@@ -205,7 +211,10 @@ export function SubjectSelect({
 
                             <button
                                 type="button"
-                                onClick={handleCreateSubject}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleCreateSubject();
+                                }}
                                 disabled={isSubmitting || !newSubjectName.trim()}
                                 className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-neutral-900 rounded-lg hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
