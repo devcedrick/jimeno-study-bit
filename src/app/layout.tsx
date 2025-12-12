@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { createServerClient } from "@/lib/supabase";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -51,16 +48,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -72,11 +64,7 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <Header user={user} />
-        <main id="main-content" className="flex-1 pt-16" role="main">
-          {children}
-        </main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -12,13 +13,17 @@ import {
     User,
     Settings,
     LogOut,
+    Target,
+    Menu,
+    X,
 } from "lucide-react";
 
 const overviewLinks = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/my-decks", label: "My decks", icon: Library },
+    { href: "/sessions", label: "Study Timer", icon: Clock },
+    { href: "/my-decks", label: "Study Log", icon: Library },
+    { href: "/goals", label: "Goals", icon: Target },
     { href: "/progress", label: "Progress", icon: TrendingUp },
-    { href: "/timer", label: "Timer", icon: Clock },
     { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -33,14 +38,40 @@ interface SidebarProps {
 
 export function Sidebar({ children }: SidebarProps) {
     const pathname = usePathname();
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div className="min-h-screen flex">
-            <aside className="fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-neutral-200 flex flex-col z-40">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-lg border border-neutral-200"
+                aria-label={isOpen ? "Close menu" : "Open menu"}
+            >
+                {isOpen ? (
+                    <X className="w-6 h-6 text-neutral-600" />
+                ) : (
+                    <Menu className="w-6 h-6 text-neutral-600" />
+                )}
+            </button>
+
+            {isOpen && (
+                <div
+                    className="lg:hidden fixed inset-0 bg-black/50 z-30"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            <aside
+                className={cn(
+                    "fixed left-0 top-0 bottom-0 w-64 bg-white border-r border-neutral-200 flex flex-col z-40 transition-transform duration-300",
+                    isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+                )}
+            >
                 <div className="p-6 border-b border-neutral-100">
                     <Link
                         href="/"
                         className="flex items-center gap-2 font-bold text-xl"
+                        onClick={() => setIsOpen(false)}
                     >
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
                             <Timer className="w-5 h-5 text-white" />
@@ -62,6 +93,7 @@ export function Sidebar({ children }: SidebarProps) {
                                     <li key={link.href}>
                                         <Link
                                             href={link.href}
+                                            onClick={() => setIsOpen(false)}
                                             className={cn(
                                                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                                                 isActive
@@ -90,6 +122,7 @@ export function Sidebar({ children }: SidebarProps) {
                                     <li key={link.href}>
                                         <Link
                                             href={link.href}
+                                            onClick={() => setIsOpen(false)}
                                             className={cn(
                                                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                                                 link.isLogout
@@ -110,7 +143,7 @@ export function Sidebar({ children }: SidebarProps) {
                 </nav>
             </aside>
 
-            <main className="flex-1 ml-64 bg-neutral-50 min-h-screen">
+            <main className="flex-1 lg:ml-64 bg-neutral-50 min-h-screen">
                 {children}
             </main>
         </div>
