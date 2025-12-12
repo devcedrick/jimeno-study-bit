@@ -45,8 +45,8 @@ export function SettingsForm({ initialProfile }: SettingsFormProps) {
             {message && (
                 <div
                     className={`p-4 rounded-lg text-sm ${message.type === "success"
-                            ? "bg-green-50 text-green-700 border border-green-200"
-                            : "bg-red-50 text-red-700 border border-red-200"
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : "bg-red-50 text-red-700 border border-red-200"
                         }`}
                 >
                     {message.text}
@@ -65,7 +65,7 @@ export function SettingsForm({ initialProfile }: SettingsFormProps) {
                         type="text"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="w-full max-w-md px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        className="w-full max-w-md px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-neutral-900 bg-white"
                     />
                 </div>
             </section>
@@ -84,7 +84,7 @@ export function SettingsForm({ initialProfile }: SettingsFormProps) {
                         step="10"
                         value={dailyGoal}
                         onChange={(e) => setDailyGoal(e.target.value)}
-                        className="w-full max-w-md px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                        className="w-full max-w-md px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-neutral-900 bg-white"
                     />
                     <p className="text-xs text-neutral-500">
                         Target study time per day. Default is 120 minutes (2 hours).
