@@ -20,7 +20,13 @@ export async function GET(request: Request) {
                     },
                     setAll(cookiesToSet) {
                         cookiesToSet.forEach(({ name, value, options }) =>
-                            cookieStore.set(name, value, options)
+                            cookieStore.set(name, value, {
+                                ...options,
+                                path: "/",
+                                sameSite: "lax",
+                                secure: process.env.NODE_ENV === "production",
+                                httpOnly: true,
+                            })
                         );
                     },
                 },
