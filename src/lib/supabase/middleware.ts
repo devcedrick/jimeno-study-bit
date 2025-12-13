@@ -32,45 +32,11 @@ export async function updateSession(request: NextRequest) {
         },
     });
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
-
-    const protectedPaths = [
-        "/dashboard",
-        "/sessions",
-        "/my-decks",
-        "/progress",
-        "/timer",
-        "/profile",
-        "/settings",
-        "/reports",
-        "/goals",
-        "/achievements",
-    ];
-
-    const isProtectedPath = protectedPaths.some((path) =>
-        request.nextUrl.pathname.startsWith(path)
-    );
-
-    if (isProtectedPath && !user) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/sign-in";
-        return NextResponse.redirect(url);
-    }
-
-    const authPaths = ["/sign-in", "/sign-up"];
-    const isAuthPath = authPaths.some((path) =>
-        request.nextUrl.pathname.startsWith(path)
-    );
-
-    if (isAuthPath && user) {
-        const url = request.nextUrl.clone();
-        url.pathname = "/dashboard";
-        return NextResponse.redirect(url);
-    }
+    // Just refresh the session, don't check auth here
+    await supabase.auth.getUser();
 
     return supabaseResponse;
 }
+
 
 
