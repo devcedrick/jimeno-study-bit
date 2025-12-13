@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+const isProduction = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
@@ -20,7 +22,13 @@ export async function GET(request: Request) {
                     },
                     setAll(cookiesToSet) {
                         cookiesToSet.forEach(({ name, value, options }) =>
-                            cookieStore.set(name, value, options)
+                            cookieStore.set(name, value, {
+                                ...options,
+                                path: "/",
+                                sameSite: "lax",
+                                secure: isProduction,
+                                httpOnly: true,
+                            })
                         );
                     },
                 },
@@ -36,4 +44,3 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }
-

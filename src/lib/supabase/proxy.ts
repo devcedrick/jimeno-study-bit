@@ -1,6 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const isProduction = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+
 export async function updateSession(request: NextRequest) {
     let supabaseResponse = NextResponse.next({
         request,
@@ -30,7 +32,13 @@ export async function updateSession(request: NextRequest) {
                     request,
                 });
                 cookiesToSet.forEach(({ name, value, options }) =>
-                    supabaseResponse.cookies.set(name, value, options)
+                    supabaseResponse.cookies.set(name, value, {
+                        ...options,
+                        path: "/",
+                        sameSite: "lax",
+                        secure: isProduction,
+                        httpOnly: true,
+                    })
                 );
             },
         },
