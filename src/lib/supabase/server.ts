@@ -8,13 +8,8 @@ export async function createClient() {
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-        console.error("[Server] Missing Supabase environment variables");
         throw new Error("Missing Supabase environment variables");
     }
-
-    const allCookies = cookieStore.getAll();
-    console.log("[Server] createClient - Cookies found:", allCookies.map(c => c.name));
-    console.log("[Server] createClient - Supabase URL:", supabaseUrl);
 
     return createServerClient(supabaseUrl, supabaseKey, {
         cookies: {
@@ -24,7 +19,13 @@ export async function createClient() {
             setAll(cookiesToSet) {
                 try {
                     cookiesToSet.forEach(({ name, value, options }) =>
-                        cookieStore.set(name, value, options)
+                        cookieStore.set(name, value, {
+                            ...options,
+                            path: "/",
+                            sameSite: "lax",
+                            secure: process.env.NODE_ENV === "production",
+                            httpOnly: true,
+                        })
                     );
                 } catch {
                     // The `setAll` method was called from a Server Component.
