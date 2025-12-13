@@ -8,9 +8,22 @@ export async function updateSession(request: NextRequest) {
         },
     });
 
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    console.log('[Middleware] Path:', request.nextUrl.pathname);
+    console.log('[Middleware] Supabase URL exists:', !!supabaseUrl);
+    console.log('[Middleware] Supabase Key exists:', !!supabaseKey);
+    console.log('[Middleware] Cookies:', request.cookies.getAll().map(c => c.name));
+
+    if (!supabaseUrl || !supabaseKey) {
+        console.error('[Middleware] Missing Supabase environment variables!');
+        return response;
+    }
+
     const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        supabaseUrl,
+        supabaseKey,
         {
             cookies: {
                 getAll() {
@@ -28,7 +41,11 @@ export async function updateSession(request: NextRequest) {
 
     const {
         data: { user },
+        error,
     } = await supabase.auth.getUser();
+
+    console.log('[Middleware] User exists:', !!user);
+    console.log('[Middleware] Auth error:', error?.message || 'none');
 
     const protectedPaths = [
         "/dashboard",
