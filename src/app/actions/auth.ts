@@ -4,6 +4,8 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+const isProduction = process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+
 export async function signIn(formData: FormData) {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
@@ -21,7 +23,13 @@ export async function signIn(formData: FormData) {
                 },
                 setAll(cookiesToSet) {
                     cookiesToSet.forEach(({ name, value, options }) => {
-                        cookieStore.set(name, value, options);
+                        cookieStore.set(name, value, {
+                            ...options,
+                            path: "/",
+                            sameSite: "lax",
+                            secure: isProduction,
+                            httpOnly: true,
+                        });
                     });
                 },
             },
@@ -56,7 +64,13 @@ export async function signUp(formData: FormData) {
                 },
                 setAll(cookiesToSet) {
                     cookiesToSet.forEach(({ name, value, options }) =>
-                        cookieStore.set(name, value, options)
+                        cookieStore.set(name, value, {
+                            ...options,
+                            path: "/",
+                            sameSite: "lax",
+                            secure: isProduction,
+                            httpOnly: true,
+                        })
                     );
                 },
             },
@@ -74,3 +88,4 @@ export async function signUp(formData: FormData) {
 
     return { success: true, message: "Check your email for verification link" };
 }
+
