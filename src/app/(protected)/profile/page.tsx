@@ -30,6 +30,8 @@ export default async function ProfilePage() {
     const totalHours = Math.floor(totalMinutes / 60);
     const totalSessions = stats?.length || 0;
 
+    const coverUrl = (profile as Record<string, unknown>)?.cover_url as string | null;
+
     return (
         <div className="min-h-screen bg-neutral-50 p-4 sm:p-6 lg:p-8">
             <div className="max-w-4xl mx-auto space-y-6">
@@ -40,7 +42,17 @@ export default async function ProfilePage() {
 
                 {/* User Info Card */}
                 <div className="bg-white rounded-2xl border border-neutral-200 shadow-sm overflow-hidden">
-                    <div className="bg-gradient-to-r from-cyan-500 to-blue-600 h-24" />
+                    {coverUrl ? (
+                        <div className="h-32 relative">
+                            <img
+                                src={coverUrl}
+                                alt="Cover"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    ) : (
+                        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 h-32" />
+                    )}
                     <div className="px-6 pb-6">
                         <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12">
                             <div className="w-24 h-24 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center overflow-hidden">

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 interface UpdateProfileData {
     fullName?: string;
     avatarUrl?: string;
+    coverUrl?: string;
     timezone?: string;
     dailyGoalMinutes?: number;
     preferredSessionDuration?: number;
@@ -25,6 +26,7 @@ export async function updateProfile(data: UpdateProfileData) {
 
     if (data.fullName !== undefined) updates.full_name = data.fullName;
     if (data.avatarUrl !== undefined) updates.avatar_url = data.avatarUrl;
+    if (data.coverUrl !== undefined) updates.cover_url = data.coverUrl;
     if (data.timezone !== undefined) updates.timezone = data.timezone;
     if (data.dailyGoalMinutes !== undefined) updates.daily_goal_minutes = data.dailyGoalMinutes;
     if (data.preferredSessionDuration !== undefined) updates.preferred_session_duration = data.preferredSessionDuration;

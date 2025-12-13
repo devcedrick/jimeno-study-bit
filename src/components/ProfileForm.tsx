@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, Clock, Target, Save, Loader2 } from "lucide-react";
+import { User, Clock, Target, Save, Loader2, ImageIcon, Camera } from "lucide-react";
 import { updateProfile } from "@/app/actions/profile";
 import type { Database } from "@/types/supabase";
 
@@ -20,6 +20,8 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
     const [success, setSuccess] = useState(false);
 
     const [fullName, setFullName] = useState(profile?.full_name || "");
+    const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || "");
+    const [coverUrl, setCoverUrl] = useState((profile as Record<string, unknown>)?.cover_url as string || "");
     const [dailyGoal, setDailyGoal] = useState(profile?.daily_goal_minutes || 120);
     const [sessionDuration, setSessionDuration] = useState(profile?.preferred_session_duration || 25);
     const [timezone, setTimezone] = useState(profile?.timezone || "UTC");
@@ -33,6 +35,8 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
         try {
             const result = await updateProfile({
                 fullName,
+                avatarUrl: avatarUrl || undefined,
+                coverUrl: coverUrl || undefined,
                 dailyGoalMinutes: dailyGoal,
                 preferredSessionDuration: sessionDuration,
                 timezone
@@ -70,6 +74,68 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
                     Profile updated successfully!
                 </div>
             )}
+
+            {/* Photo URLs Section */}
+            <div className="space-y-4 p-4 bg-neutral-50 rounded-xl">
+                <h4 className="text-sm font-semibold text-neutral-700 flex items-center gap-2">
+                    <Camera className="w-4 h-4" />
+                    Profile Photos
+                </h4>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {/* Avatar URL */}
+                    <div className="space-y-2">
+                        <label htmlFor="avatarUrl" className="block text-sm font-medium text-neutral-700">
+                            Avatar Image URL
+                        </label>
+                        <div className="relative">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                            <input
+                                id="avatarUrl"
+                                type="url"
+                                value={avatarUrl}
+                                onChange={(e) => setAvatarUrl(e.target.value)}
+                                placeholder="https://example.com/avatar.jpg"
+                                className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-neutral-900 bg-white text-sm"
+                            />
+                        </div>
+                        {avatarUrl && (
+                            <div className="flex items-center gap-2">
+                                <div className="w-10 h-10 rounded-full overflow-hidden bg-neutral-200">
+                                    <img src={avatarUrl} alt="Avatar preview" className="w-full h-full object-cover" onError={(e) => e.currentTarget.style.display = 'none'} />
+                                </div>
+                                <span className="text-xs text-neutral-500">Preview</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Cover URL */}
+                    <div className="space-y-2">
+                        <label htmlFor="coverUrl" className="block text-sm font-medium text-neutral-700">
+                            Cover Image URL
+                        </label>
+                        <div className="relative">
+                            <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                            <input
+                                id="coverUrl"
+                                type="url"
+                                value={coverUrl}
+                                onChange={(e) => setCoverUrl(e.target.value)}
+                                placeholder="https://example.com/cover.jpg"
+                                className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-neutral-900 bg-white text-sm"
+                            />
+                        </div>
+                        {coverUrl && (
+                            <div className="h-12 rounded-lg overflow-hidden bg-neutral-200">
+                                <img src={coverUrl} alt="Cover preview" className="w-full h-full object-cover" onError={(e) => e.currentTarget.style.display = 'none'} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <p className="text-xs text-neutral-500">
+                    Tip: You can use image hosting services like Imgur, Cloudinary, or any direct image URL.
+                </p>
+            </div>
 
             <div className="grid gap-6 sm:grid-cols-2">
                 {/* Full Name */}
