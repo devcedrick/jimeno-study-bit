@@ -14,6 +14,7 @@ export default async function ProfilePage() {
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
+        console.error("ProfilePage - No user found, redirecting to /sign-in");
         redirect("/sign-in");
     }
 

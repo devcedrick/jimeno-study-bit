@@ -18,8 +18,10 @@ export default async function ReportsPage({
 }) {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
+    console.log("ReportsPage - User:", user);
 
     if (!user) {
+        console.error("ReportsPage - No user found, redirecting to /sign-in");
         redirect("/sign-in");
     }
 
