@@ -5,6 +5,7 @@ import { ReportFilters } from "@/components/ReportFilters";
 import { ReportCharts } from "@/components/ReportCharts";
 import { redirect } from "next/navigation";
 import { Clock, BookOpen, Target, ShieldCheck, Download } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
     title: "Reports",
@@ -15,7 +16,7 @@ export default async function ReportsPage({
 }: {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    const supabase = await createServerClient();
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
